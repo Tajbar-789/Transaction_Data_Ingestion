@@ -1,0 +1,7 @@
+total_records_recieved : 555
+total_records_successfully_processed : 361
+total_records_rejected : 3
+reason_for_rejected_records : ['Missing primary key (ref_no)' 'Both debit and credit present'
+ 'Neither debit nor credit present']
+no_of_duplicates_removed : 191
+impact_of_late_correction_file : 3 records were added to the earlier data and deduped based on ref_no and processed later.The end result is sorted based on account_number,txn_date and txn_time to place the late arrived data in correct order 
