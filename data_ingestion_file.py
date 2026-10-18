@@ -10,6 +10,7 @@ CONFIG = {
         "input_file_format": "*.csv",
         "output_dir": "./output",
         "clean_file_path": "./output/transaction_valid_final_file.csv",
+        "quarantine_file_path": "./output/quarantine_file.csv",
         "summary_file": "./output/summary.txt",
         "primary_key": "ref_no",
         "date_col": "txn_date",
@@ -84,7 +85,7 @@ class Dataingestion_Pipeline:
             combined_df = valid_df.copy()
 
         #  SORT: Ensure the newest/highest priority records are at the bottom
-        combined_df = combined_df.sort_values(by=[self.primary_key])
+        combined_df = combined_df.sort_values(by=['account_number','txn_date','txn_time'])
 
         #  UPSERT (DEDUPLICATE): Drop duplicates based on the ref_no , keeping the last row
         # - If 'ref_no' is new, it gets inserted.
@@ -93,6 +94,8 @@ class Dataingestion_Pipeline:
 
         #  OVERWRITE: Save the new state back to disk (happens in your run() method)
         final_clean.to_csv(self.clean_file_path, index=False)
+
+        quarantine_df.to_csv(self.cfg["quarantine_file_path"],index=False)
 
         # Reporting logic
         total_records_recieved=len(df)
